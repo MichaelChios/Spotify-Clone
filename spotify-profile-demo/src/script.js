@@ -1,6 +1,6 @@
 import 'dotenv/config.js';
 
-const clientId = process.env.CLIENT_ID; // Replace with your client ID
+const clientId = 'Your client id'; // Replace with your client ID
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
 
