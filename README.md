@@ -1,5 +1,7 @@
 # Spotify Clone
- 
+
+API Documentation: https://developer.spotify.com/documentation/web-api
+
 ## Installing node modules
 ## Step 1: Open terminal and type:
 ```bash
