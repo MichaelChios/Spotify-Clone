@@ -12,11 +12,10 @@ if (!code) {
     populateUI(profile);
 }
 
-export async function redirectToAuthCodeFlow(clientId) {
-    const verifier = generateCodeVerifier(128);
-    const challenge = await generateCodeChallenge(verifier);
-
-    localStorage.setItem("verifier", verifier);
+async function redirectToAuthCodeFlow(clientId) {
+    const verifier = generateCodeVerifier(128); // generate a random string with a minimum length of 43 characters
+    const challenge = await generateCodeChallenge(verifier); // generate a code challenge from the code verifier
+    localStorage.setItem("verifier", verifier); // store the code verifier in local storage
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
@@ -26,7 +25,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("code_challenge_method", "S256");
     params.append("code_challenge", challenge);
 
-    document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+    document.location = `https://accounts.spotify.com/authorize?${params.toString()}`; 
 }
 
 function generateCodeVerifier(length) {
@@ -41,9 +40,9 @@ function generateCodeVerifier(length) {
 
 async function generateCodeChallenge(codeVerifier) {
     const data = new TextEncoder().encode(codeVerifier);
-    const digest = await window.crypto.subtle.digest('SHA-256', data);
-    return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
-        .replace(/\+/g, '-')
+    const digest = await window.crypto.subtle.digest('SHA-256', data); // hash the code verifier
+    return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)])) // base64url encode the hash
+        .replace(/\+/g, '-') // replace characters according to the base64url spec
         .replace(/\//g, '_')
         .replace(/=+$/, '');
 }
@@ -58,7 +57,7 @@ export async function getAccessToken(clientId, code) {
     params.append("redirect_uri", "http://localhost:5173/callback");
     params.append("code_verifier", verifier);
 
-    const result = await fetch("https://accounts.spotify.com/api/token", {
+    const result = await fetch("https://accounts.spotify.com/api/token", { // exchange the authorization code for an access token
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params
